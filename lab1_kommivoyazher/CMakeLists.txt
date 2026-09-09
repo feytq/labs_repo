@@ -1,0 +1,1 @@
+add_executable(lab1_kommivoyazher main.cpp)
