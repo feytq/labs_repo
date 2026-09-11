@@ -1,51 +1,94 @@
 #include <iostream>
-using namespace std;
-const int N = 5;
+#include "Matrix.h"
 
-void Swap(int *a, int *b){
-    int temp = *a;
-    *a = *b;
-    *b = temp;
+const int CITIES_COUNT = 10;
+
+void swap(int& a, int& b) {
+    int temp = a;
+    a = b;
+    b = temp;
 }
-void Reverse(int *start, int *end){
-    while(start < end){
-        Swap(start, end);
+
+void reverse(int* p, int start, int end) {
+    while (start < end) {
+        swap(p[start], p[end]);
         start++;
         end--;
     }
 }
-void Print(int *P, int n){
-    for(int i = 0; i < n; i++){
-        cout << P[i] << " ";
+
+void print(const int* p, int n) {
+    for (int i = 0; i < n; i++) {
+        std::cout << p[i] << " ";
     }
-    cout << endl;
+    std::cout << std::endl;
 }
-bool Permutation(int *P, int n){
-    int i, j;
-    for(i = n - 2; i >= 0; i--){
-        if (P[i] < P[i + 1]) {
+
+bool nextPermutation(int* p, int n) {
+    int i;
+    for (i = n - 2; i >= 0; i--) {
+        if (p[i] < p[i + 1]) {
             break;
         }
     }
-    if (i < 0){
+
+    if (i < 0) {
         return false;
     }
-    for(j = n - 1; j > i; j--){
-        if(P[i] < P[j]){
+
+    int j;
+    for (j = n - 1; j > i; j--) {
+        if (p[i] < p[j]) {
             break;
         }
     }
-    Swap(&P[i], &P[j]);
-    Reverse(&P[i + 1], &P[n - 1]);
+
+    swap(p[i], p[j]);
+    reverse(p, i + 1, n - 1);
 
     return true;
 }
 
-int main(){
-    int P[N] = {1, 2, 3, 4, 5};
-    Print(P, N);
-    while(Permutation(P, N)){
-        Print(P, N);
+int calculateRouteCost(int** matrix, int startCity, const int* route, int routeSize) {
+    int cost = 0;
+    int currentCity = startCity;
+
+    for(int i = 0; i < routeSize; i++) {
+        cost += matrix[currentCity][route[i]];
+        currentCity = route[i];
     }
+
+    cost += matrix[currentCity][startCity];
+
+    return cost;
+}
+
+int main() {
+    int nCities = CITIES_COUNT;
+    int** matrix = createMatrix(nCities);
+    fillRandomMatrix(matrix, nCities, 1, 10);
+
+    printMatrix(matrix, nCities);
+
+    int routeSize = nCities - 1;
+    int* route = new int[routeSize];
+    for (int i = 0; i < routeSize; i++) {
+        route[i] = i + 1;
+    }
+
+    int minCost = calculateRouteCost(matrix, 0, route, routeSize);
+
+    while (nextPermutation(route, routeSize)) {
+        int currentCost = calculateRouteCost(matrix, 0, route, routeSize);
+        if (currentCost < minCost) {
+            minCost = currentCost;
+        }
+    }
+
+    std::cout << "Min cost: " << minCost << std::endl;
+
+    delete[] route;
+    destroyMatrix(matrix, nCities);
+
     return 0;
 }
