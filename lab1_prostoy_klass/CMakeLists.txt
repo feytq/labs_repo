@@ -1,0 +1,1 @@
+add_executable(lab1_prostoy_klass main.cpp Segment.h Segment.cpp)
