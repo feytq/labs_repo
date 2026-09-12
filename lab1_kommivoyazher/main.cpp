@@ -1,70 +1,11 @@
+#include <chrono>
 #include <iostream>
 #include "Matrix.h"
+#include "KommivoyazherSolver.h"
 
-const int CITIES_COUNT = 10;
+void runTest(int nCities) {
+    unsigned long long iterationsCount = 1;
 
-void swap(int& a, int& b) {
-    int temp = a;
-    a = b;
-    b = temp;
-}
-
-void reverse(int* p, int start, int end) {
-    while (start < end) {
-        swap(p[start], p[end]);
-        start++;
-        end--;
-    }
-}
-
-void print(const int* p, int n) {
-    for (int i = 0; i < n; i++) {
-        std::cout << p[i] << " ";
-    }
-    std::cout << std::endl;
-}
-
-bool nextPermutation(int* p, int n) {
-    int i;
-    for (i = n - 2; i >= 0; i--) {
-        if (p[i] < p[i + 1]) {
-            break;
-        }
-    }
-
-    if (i < 0) {
-        return false;
-    }
-
-    int j;
-    for (j = n - 1; j > i; j--) {
-        if (p[i] < p[j]) {
-            break;
-        }
-    }
-
-    swap(p[i], p[j]);
-    reverse(p, i + 1, n - 1);
-
-    return true;
-}
-
-int calculateRouteCost(int** matrix, int startCity, const int* route, int routeSize) {
-    int cost = 0;
-    int currentCity = startCity;
-
-    for(int i = 0; i < routeSize; i++) {
-        cost += matrix[currentCity][route[i]];
-        currentCity = route[i];
-    }
-
-    cost += matrix[currentCity][startCity];
-
-    return cost;
-}
-
-int main() {
-    int nCities = CITIES_COUNT;
     int** matrix = createMatrix(nCities);
     fillRandomMatrix(matrix, nCities, 1, 10);
 
@@ -76,19 +17,44 @@ int main() {
         route[i] = i + 1;
     }
 
-    int minCost = calculateRouteCost(matrix, 0, route, routeSize);
+    int firstCost = calculateRouteCost(matrix, 0, route, routeSize);
+    int minCost = firstCost;
+    int maxCost = firstCost;
+
+    const auto startTime = std::chrono::high_resolution_clock::now();
 
     while (nextPermutation(route, routeSize)) {
         int currentCost = calculateRouteCost(matrix, 0, route, routeSize);
         if (currentCost < minCost) {
             minCost = currentCost;
         }
+        if (currentCost > maxCost) {
+            maxCost = currentCost;
+        }
+        iterationsCount++;
     }
 
+    const auto endTime = std::chrono::high_resolution_clock::now();
+    const std::chrono::duration<double> elapsedTime = endTime - startTime;
+
     std::cout << "Min cost: " << minCost << std::endl;
+    std::cout << "Max cost: " << maxCost << std::endl;
+    std::cout << "Iterations: " << iterationsCount << std::endl;
+    std::cout << "Elapsed time: " << elapsedTime.count() << " seconds" << std::endl;
 
     delete[] route;
     destroyMatrix(matrix, nCities);
+}
+
+int main() {
+    int testSizes[] = {4, 6, 8, 10, 11, 12};
+
+    int testSizesCount = sizeof(testSizes) / sizeof(testSizes[0]);
+    for (int i = 0; i < testSizesCount; i++) {
+        int nCities = testSizes[i];
+        runTest(nCities);
+        std::cout << std::endl;
+    }
 
     return 0;
 }

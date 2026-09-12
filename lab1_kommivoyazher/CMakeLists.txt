@@ -1,1 +1,1 @@
-add_executable(lab1_kommivoyazher main.cpp matrix.cpp matrix.h)
+add_executable(lab1_kommivoyazher main.cpp matrix.cpp matrix.h kommivoyazherSolver.h KommivoyazherSolver.cpp)

@@ -1,6 +1,6 @@
+#include "Matrix.h"
 #include <random>
 #include <iostream>
-#include "matrix.h"
 
 int** createMatrix(int nCities) {
     int** matrix = new int*[nCities];
