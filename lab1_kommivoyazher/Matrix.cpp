@@ -1,6 +1,5 @@
 #include "Matrix.h"
 #include <random>
-#include <iostream>
 
 int** createMatrix(int nCities) {
     int** matrix = new int*[nCities];
@@ -30,14 +29,5 @@ void fillRandomMatrix(int** matrix, int nCities, int minCost, int maxCost) {
                 matrix[i][j] = distribution(generator);
             }
         }
-    }
-}
-
-void printMatrix(int** matrix, int nCities) {
-    for (int i = 0; i < nCities; i++) {
-        for (int j = 0; j < nCities; j++) {
-            std::cout << matrix[i][j] << " ";
-        }
-        std::cout << std::endl;
     }
 }

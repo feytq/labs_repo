@@ -1,59 +1,47 @@
-#include <chrono>
+#include <iomanip>
 #include <iostream>
 #include "Matrix.h"
 #include "KommivoyazherSolver.h"
 
-void runTest(int nCities) {
-    unsigned long long iterationsCount = 1;
-
+void runExperiment(int nCities, int runIndex, int minRange, int maxRange) {
     int** matrix = createMatrix(nCities);
-    fillRandomMatrix(matrix, nCities, 1, 10);
+    fillRandomMatrix(matrix, nCities, minRange, maxRange);
 
-    printMatrix(matrix, nCities);
+    int startCity = 0;
+    ExactResult exact = solveBruteForce(matrix, nCities, startCity);
+    GreedyResult greedy = solveGreedy(matrix, nCities, startCity);
 
-    int routeSize = nCities - 1;
-    int* route = new int[routeSize];
-    for (int i = 0; i < routeSize; i++) {
-        route[i] = i + 1;
-    }
+    double quality = calculateQuality(exact.minCost, exact.maxCost, greedy.cost);
 
-    int firstCost = calculateRouteCost(matrix, 0, route, routeSize);
-    int minCost = firstCost;
-    int maxCost = firstCost;
+    std::cout << "  Run #" << runIndex 
+              << " | Exact [Min: " << exact.minCost 
+              << ", Max: " << exact.maxCost 
+              << ", Time: " << std::defaultfloat << exact.timeInSeconds << "s]"
+              << " | Greedy [Cost: " << greedy.cost 
+              << ", Time: " << std::defaultfloat << greedy.timeInSeconds << "s]"
+              << " | Quality: " << std::fixed << std::setprecision(1) << quality << "%" 
+              << std::endl;
 
-    const auto startTime = std::chrono::high_resolution_clock::now();
-
-    while (nextPermutation(route, routeSize)) {
-        int currentCost = calculateRouteCost(matrix, 0, route, routeSize);
-        if (currentCost < minCost) {
-            minCost = currentCost;
-        }
-        if (currentCost > maxCost) {
-            maxCost = currentCost;
-        }
-        iterationsCount++;
-    }
-
-    const auto endTime = std::chrono::high_resolution_clock::now();
-    const std::chrono::duration<double> elapsedTime = endTime - startTime;
-
-    std::cout << "Min cost: " << minCost << std::endl;
-    std::cout << "Max cost: " << maxCost << std::endl;
-    std::cout << "Iterations: " << iterationsCount << std::endl;
-    std::cout << "Elapsed time: " << elapsedTime.count() << " seconds" << std::endl;
-
-    delete[] route;
     destroyMatrix(matrix, nCities);
 }
 
 int main() {
     int testSizes[] = {4, 6, 8, 10, 11, 12};
-
     int testSizesCount = sizeof(testSizes) / sizeof(testSizes[0]);
+    int runsPerSize = 3;
+
+    int minCostRange = 10;
+    int maxCostRange = 1000;
+
+    std::cout << "=== KOMMIVOYAZHER EXPERIMENT (Cost Range: " << minCostRange << " - " << maxCostRange << ") ===" << std::endl;
+
     for (int i = 0; i < testSizesCount; i++) {
         int nCities = testSizes[i];
-        runTest(nCities);
-        std::cout << std::endl;
+        std::cout << "\nDimension: " << nCities << "x" << nCities << std::endl;
+        
+        for (int run = 1; run <= runsPerSize; run++) {
+            runExperiment(nCities, run, minCostRange, maxCostRange);
+        }
     }
 
     return 0;
