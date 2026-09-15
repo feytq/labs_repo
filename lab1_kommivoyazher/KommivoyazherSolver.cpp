@@ -1,7 +1,7 @@
 #include "KommivoyazherSolver.h"
 #include "Matrix.h"
 #include <chrono>
-
+#include <iostream>
 namespace {
 
 void swap(int& a, int& b) {
@@ -62,10 +62,13 @@ int calculateRouteCost(int** matrix, int startCity, const int* route, int routeS
 ExactResult solveBruteForce(int** matrix, int nCities, int startCity) {
     int routeSize = nCities - 1;
     int* route = new int[routeSize];
+    int* bestRoute = new int[routeSize];
     int idx = 0;
     for (int i = 0; i < nCities; i++) {
         if (i != startCity) {
-            route[idx++] = i;
+            route[idx] = i;
+            bestRoute[idx] = i;
+            idx++;
         }
     }
 
@@ -74,11 +77,14 @@ ExactResult solveBruteForce(int** matrix, int nCities, int startCity) {
     int firstCost = calculateRouteCost(matrix, startCity, route, routeSize);
     int minCost = firstCost;
     int maxCost = firstCost;
-
     while (nextPermutation(route, routeSize)) {
         int currentCost = calculateRouteCost(matrix, startCity, route, routeSize);
         if (currentCost < minCost) {
             minCost = currentCost;
+            int idx = 0;
+            for (int i = 0; i < routeSize; i++) {
+                bestRoute[i] = route[i];
+            }
         }
         if (currentCost > maxCost) {
             maxCost = currentCost;
@@ -88,6 +94,13 @@ ExactResult solveBruteForce(int** matrix, int nCities, int startCity) {
     const auto endTime = std::chrono::high_resolution_clock::now();
     const std::chrono::duration<double> elapsedTime = endTime - startTime;
 
+    std::cout << "Best Path: " << startCity;
+    for (int i = 0; i < routeSize; i++) {
+        std::cout << "-" << bestRoute[i];
+    }
+    std::cout << "-" << startCity << " | ";
+
+    delete[] bestRoute;
     delete[] route;
     return {minCost, maxCost, elapsedTime.count()};
 }
@@ -129,7 +142,13 @@ GreedyResult solveGreedy(int** matrix, int nCities, int startCity) {
     const auto endTime = std::chrono::high_resolution_clock::now();
     const std::chrono::duration<double> elapsedTime = endTime - startTime;
 
-        delete[] route;
+    std::cout << "Greedy Path: " << startCity;
+    for (int i = 0; i < routeSize; i++) {
+        std::cout << "-" << route[i];
+    }
+    std::cout << "-" << startCity << " | ";
+
+    delete[] route;
     return {totalCost, elapsedTime.count()};
 }
 

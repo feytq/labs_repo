@@ -7,20 +7,22 @@ void runExperiment(int nCities, int runIndex, int minRange, int maxRange) {
     int** matrix = createMatrix(nCities);
     fillRandomMatrix(matrix, nCities, minRange, maxRange);
 
-    int startCity = 0;
-    ExactResult exact = solveBruteForce(matrix, nCities, startCity);
-    GreedyResult greedy = solveGreedy(matrix, nCities, startCity);
+    for (int startCity = 0; startCity < nCities; startCity++) {
+        ExactResult exact = solveBruteForce(matrix, nCities, startCity);
+        GreedyResult greedy = solveGreedy(matrix, nCities, startCity);
 
-    double quality = calculateQuality(exact.minCost, exact.maxCost, greedy.cost);
+        double quality = calculateQuality(exact.minCost, exact.maxCost, greedy.cost);
 
-    std::cout << "  Run #" << runIndex 
-              << " | Exact [Min: " << exact.minCost 
-              << ", Max: " << exact.maxCost 
-              << ", Time: " << std::defaultfloat << exact.timeInSeconds << "s]"
-              << " | Greedy [Cost: " << greedy.cost 
-              << ", Time: " << std::defaultfloat << greedy.timeInSeconds << "s]"
-              << " | Quality: " << std::fixed << std::setprecision(1) << quality << "%" 
-              << std::endl;
+        std::cout   << "  Run #" << runIndex
+                    << " | Exact [Min: " << exact.minCost
+                    << "  Start City:" << startCity
+                    << ", Max: " << exact.maxCost 
+                    << ", Time: " << std::defaultfloat << exact.timeInSeconds << "s]"
+                    << " | Greedy [Cost: " << greedy.cost 
+                    << ", Time: " << std::defaultfloat << greedy.timeInSeconds << "s]"
+                    << " | Quality: " << std::fixed << std::setprecision(1) << quality << "%" 
+                    << std::endl;
+    }
 
     destroyMatrix(matrix, nCities);
 }
@@ -38,7 +40,6 @@ int main() {
     for (int i = 0; i < testSizesCount; i++) {
         int nCities = testSizes[i];
         std::cout << "\nDimension: " << nCities << "x" << nCities << std::endl;
-        
         for (int run = 1; run <= runsPerSize; run++) {
             runExperiment(nCities, run, minCostRange, maxCostRange);
         }
