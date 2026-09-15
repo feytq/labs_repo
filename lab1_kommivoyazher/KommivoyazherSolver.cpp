@@ -129,7 +129,7 @@ GreedyResult solveGreedy(int** matrix, int nCities, int startCity) {
     const auto endTime = std::chrono::high_resolution_clock::now();
     const std::chrono::duration<double> elapsedTime = endTime - startTime;
 
-        delete[] route;
+    delete[] route;
     return {totalCost, elapsedTime.count()};
 }
 
