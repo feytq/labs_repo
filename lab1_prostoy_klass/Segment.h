@@ -1,6 +1,6 @@
 #pragma once
 
-class Segment{
+class Segment {
     public:
         // Конструкторы
 
@@ -20,21 +20,21 @@ class Segment{
         double getX2() const;
         double getY2() const;
 
-        void setX1(const double x);
-        void setY1(const double y);
+        void setX1(const double x1);
+        void setY1(const double y1);
     
-        void setX2(const double x);
-        void setY2(const double y);
+        void setX2(const double x2);
+        void setY2(const double y2);
         
-        // Методы (основные)
+        // Базовые геометрические методы (на 3)
 
-        void midpoint(double& x, double& y) const;
-        void partition(const double ratio, double& x, double& y) const;
-
+        void computeMidpoint(double& x, double& y) const;
+        void computePartitionPoint(const double ratio, double& x, double& y) const;
         bool operator==(const Segment& other) const;
-        bool parallel_y() const;
-        bool perpendicular(const Segment& other) const;
-        bool intersection_x() const;
+
+        bool isParallelToY() const;
+        bool isPerpendicularTo(const Segment& other) const;
+        bool isIntersectingX() const;
 
     private:
 
