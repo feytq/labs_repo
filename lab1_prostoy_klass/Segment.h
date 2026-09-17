@@ -31,10 +31,13 @@ class Segment {
         void computeMidpoint(double& x, double& y) const;
         void computePartitionPoint(const double ratio, double& x, double& y) const;
         bool operator==(const Segment& other) const;
-
         bool isParallelToY() const;
         bool isPerpendicularTo(const Segment& other) const;
         bool isIntersectingX() const;
+
+        // Дополнительные методы (на 4)
+        bool isIntersectingLine(const double a, const double b, const double c) const;
+        bool isPointOnLine(const double x, const double y) const;
 
     private:
 

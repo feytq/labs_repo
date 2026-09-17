@@ -83,3 +83,15 @@ bool Segment::isPerpendicularTo(const Segment& other) const {
 bool Segment::isIntersectingX() const {
     return (y1_ * y2_) <= 0.0;
 }
+
+bool Segment::isIntersectingLine(const double a, const double b, const double c) const{
+    double f1 = a * x1_ + b * y1_ + c;
+    double f2 = a * x2_ + b * y2_ + c;
+
+    return (f1 * f2) <= 0.0;
+}
+
+bool Segment::isPointOnLine(const double x, const double y) const {
+    const double crossProduct = (x - x1_) * (y2_ - y1_) - (x2_ - x1_) * (y - y1_);
+    return std::abs(crossProduct) < 1e-9;
+}
