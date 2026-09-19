@@ -52,7 +52,7 @@ void Segment::computeMidpoint(double& x, double& y) const {
 }
 
 void Segment::computePartitionPoint(const double ratio, double& x, double& y) const {
-    if (std::abs(ratio + 1.0) < 1e-9) {
+    if (std::abs(ratio + 1.0) < 1.0e-9) {
         return;
     }
     x = (x1_ + ratio * x2_) / (1.0 + ratio);
@@ -63,11 +63,11 @@ bool Segment::operator==(const Segment& other) const {
     const double len1 = std::hypot(x2_ - x1_, y2_ - y1_);
     const double len2 = std::hypot(other.x2_ - other.x1_, other.y2_ - other.y1_);
 
-    return std::abs(len1 - len2) < 1e-9;
+    return std::abs(len1 - len2) < 1.0e-9;
 }
 
 bool Segment::isParallelToY() const {
-    return std::abs(x1_ - x2_) < 1e-9;
+    return std::abs(x1_ - x2_) < 1.0e-9;
 }
 
 bool Segment::isPerpendicularTo(const Segment& other) const {
@@ -77,14 +77,14 @@ bool Segment::isPerpendicularTo(const Segment& other) const {
     const double dy2 = other.y2_ - other.y1_;
 
     const double dotProduct = dx1 * dx2 + dy1 * dy2;
-    return std::abs(dotProduct) < 1e-9;
+    return std::abs(dotProduct) < 1.0e-9;
 }
 
 bool Segment::isIntersectingX() const {
     return (y1_ * y2_) <= 0.0;
 }
 
-bool Segment::isIntersectingLine(const double a, const double b, const double c) const{
+bool Segment::isIntersectingLine(const double a, const double b, const double c) const {
     double f1 = a * x1_ + b * y1_ + c;
     double f2 = a * x2_ + b * y2_ + c;
 
@@ -93,5 +93,34 @@ bool Segment::isIntersectingLine(const double a, const double b, const double c)
 
 bool Segment::isPointOnLine(const double x, const double y) const {
     const double crossProduct = (x - x1_) * (y2_ - y1_) - (x2_ - x1_) * (y - y1_);
-    return std::abs(crossProduct) < 1e-9;
+    return std::abs(crossProduct) < 1.0e-9;
+}
+
+bool Segment::computeRatio(const double x, const double y, double& ratio) const {
+    if (!isPointOnLine(x, y)) {
+        return false;
+    }
+
+    if (std::abs(x2_ - x1_) > 1.0e-9) {
+        const double denominator = x2_ - x;
+        if (std::abs(denominator) < 1.0e-9) {
+            return false;
+        }
+        ratio = (x - x1_) / denominator;
+        return true;
+    }
+
+    const double denominator = y2_ - y;
+    if (std::abs(denominator) < 1.0e-9) {
+        return false;
+    }
+    ratio = (y - y1_) / denominator;
+    return true;
+}
+
+Segment Segment::operator*(const double factor) const {
+    const double newX2 = x1_ + factor * (x2_ - x1_); 
+    const double newY2 = y1_ + factor * (y2_ - y1_); 
+
+    return Segment(x1_, y1_, newX2, newY2);
 }

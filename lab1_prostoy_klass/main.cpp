@@ -31,5 +31,18 @@ int main() {
 
     std::cout << "segVertical isIntersectingX: " << segVertical.isIntersectingX() << std::endl; // return 1 (true)
 
+    std::cout << "\nseg1 isIntersectingLine: " << seg1.isIntersectingLine(0.0, 1.0, -2.0) << std::endl; // return 1 (true)
+
+    std::cout << "seg1 isPointOnLine: " << seg1.isPointOnLine(2.0, 2.0) << std::endl; // return 1 (true)
+
+    double ratio = 0.0;
+    if (seg1.computeRatio(2.0, 2.0, ratio)) {
+        std::cout << "\nseg1 computeRatio: " << ratio << std::endl; // ratio = 1
+    }
+
+    Segment segScaled = seg1 * 2.0;
+    std::cout << "seg1 * 2.0: ";
+    segScaled.output(); // [(0; 0), (8; 8)]
+
     return 0;
 }

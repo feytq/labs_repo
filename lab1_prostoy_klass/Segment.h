@@ -26,7 +26,7 @@ class Segment {
         void setX2(const double x2);
         void setY2(const double y2);
         
-        // Базовые геометрические методы (на 3)
+        // Методы
 
         void computeMidpoint(double& x, double& y) const;
         void computePartitionPoint(const double ratio, double& x, double& y) const;
@@ -35,9 +35,11 @@ class Segment {
         bool isPerpendicularTo(const Segment& other) const;
         bool isIntersectingX() const;
 
-        // Дополнительные методы (на 4)
         bool isIntersectingLine(const double a, const double b, const double c) const;
         bool isPointOnLine(const double x, const double y) const;
+
+        bool computeRatio(const double x, const double y, double& ratio) const;
+        Segment operator*(const double factor) const;
 
     private:
 
