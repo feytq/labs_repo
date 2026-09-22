@@ -48,5 +48,41 @@ int findFirst(const std::string& text, const std::string& pattern) {
         unsigned char symbol = static_cast<unsigned char>(text[windowEnd]);
         windowEnd += shiftTable[symbol];
     }
+    
     return -1;
-}   
+} 
+
+
+std::vector<int> findAll(const std::string& text, const std::string& pattern) {
+    int patternLength = static_cast<int>(pattern.length());
+    int textLength = static_cast<int>(text.length());
+
+    std::vector<int> indexTable;
+
+    if (patternLength == 0 || textLength < patternLength) {
+        return indexTable;
+    }
+
+    std::vector<int> shiftTable = buildShiftTable(pattern);
+
+    int windowEnd = patternLength - 1;
+    
+    while (windowEnd < textLength) {
+        int patternIndex = patternLength - 1;
+        int textIndex = windowEnd;
+
+        while (patternIndex >= 0 && text[textIndex] == pattern[patternIndex]) {
+            textIndex--;
+            patternIndex--;
+        }
+
+        if (patternIndex < 0) {
+            indexTable.push_back(textIndex + 1);
+        }
+
+        unsigned char symbol = static_cast<unsigned char>(text[windowEnd]);
+        windowEnd += shiftTable[symbol];
+    }
+    
+    return indexTable;
+}
