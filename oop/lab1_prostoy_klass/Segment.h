@@ -46,3 +46,5 @@ class Segment {
         double x1_ = 0.0, y1_ = 0.0;
         double x2_ = 0.0, y2_ = 0.0;
 };
+
+Segment operator*(const double factor, const Segment& segment);

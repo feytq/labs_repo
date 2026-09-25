@@ -52,7 +52,7 @@ void Segment::computeMidpoint(double& x, double& y) const {
 }
 
 void Segment::computePartitionPoint(const double ratio, double& x, double& y) const {
-    if (std::abs(ratio + 1.0) < 1.0e-9) {
+    if (ratio < 0.0) {
         return;
     }
     x = (x1_ + ratio * x2_) / (1.0 + ratio);
@@ -121,6 +121,10 @@ bool Segment::computeRatio(const double x, const double y, double& ratio) const 
 Segment Segment::operator*(const double factor) const {
     const double newX2 = x1_ + factor * (x2_ - x1_); 
     const double newY2 = y1_ + factor * (y2_ - y1_); 
-
+ 
     return Segment(x1_, y1_, newX2, newY2);
+}
+
+Segment operator*(const double factor, const Segment& segment) {
+    return segment * factor;
 }

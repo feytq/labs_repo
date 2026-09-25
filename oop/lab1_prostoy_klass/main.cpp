@@ -44,5 +44,9 @@ int main() {
     std::cout << "seg1 * 2.0: ";
     segScaled.output(); // [(0; 0), (8; 8)]
 
+    Segment segScaled1 =  4.0 * seg1;
+    std::cout << "4.0 * seg1: ";
+    segScaled1.output(); // [(0; 0), (16; 16)]
+
     return 0;
 }
