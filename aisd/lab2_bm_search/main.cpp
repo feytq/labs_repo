@@ -8,14 +8,23 @@ int main() {
     std::string pattern = "tor";
 
     int firstIndex = findFirst(text, pattern);
-    std::cout << "firstIndex " << firstIndex;
+    std::cout << "firstIndex: " << firstIndex << std::endl;
 
     std::vector<int> allIndex = findAll(text, pattern);
-    std::cout << " allIndex: ";
+    std::cout << "allIndex: ";
 
-    for (int index : allIndex) {
-        std::cout << index << " ";
+    for (int index1 : allIndex) {
+        std::cout << index1 << " ";
     }
+    std::cout << std::endl;
+    
+    std::vector<int> diapIndex = findAll(text, pattern, 28, 36);
+    std::cout << "diapIndex: ";
+
+    for (int index2 : diapIndex) {
+        std::cout << index2 << " ";
+    }
+    std::cout << std::endl;
 
     return 0;
 }
