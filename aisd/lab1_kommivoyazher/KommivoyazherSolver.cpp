@@ -81,7 +81,6 @@ ExactResult solveBruteForce(int** matrix, int nCities, int startCity) {
         int currentCost = calculateRouteCost(matrix, startCity, route, routeSize);
         if (currentCost < minCost) {
             minCost = currentCost;
-            int idx = 0;
             for (int i = 0; i < routeSize; i++) {
                 bestRoute[i] = route[i];
             }
