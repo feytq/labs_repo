@@ -13,4 +13,5 @@ endif()
 
 add_subdirectory(aisd/lab1_kommivoyazher)
 add_subdirectory(aisd/lab2_bm_search)
+add_subdirectory(aisd/lab3_shell_sort)
 add_subdirectory(oop/lab1_prostoy_klass)
