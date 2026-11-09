@@ -2,22 +2,18 @@
 #include <iostream>
 #include <vector>
 
+void testSort(const std::string& name, std::vector<int> arr, const std::vector<int>& gaps) {
+    shellSort(arr, gaps);
+    std::cout << name << " sort result: " << (isSorted(arr) ? "PASSED" : "FAILED") << "\n";
+}
+
 int main() {
-    std::vector<int> data = {9, 8, 3, 7, 5, 6, 4, 1, -5, 0, 12};
+    std::vector<int> sample = {15, 3, 2, 56, 12, -4, 0, 8, 33, 1, 9, 21};
+    int n = static_cast<int>(sample.size());
 
-    std::cout << "Before sorting: ";
-    for (int x : data) {
-        std::cout << x << " ";
-    }
-    std::cout << "\nIs sorted? " << (isSorted(data) ? "Yes" : "No") << "\n\n";
-
-    shellSort(data);
-
-    std::cout << "After sorting:  ";
-    for (int x : data) {
-        std::cout << x << " ";
-    }
-    std::cout << "\nIs sorted? " << (isSorted(data) ? "Yes" : "No") << "\n";
+    testSort("Shell", sample, getShellGaps(n));
+    testSort("Hibbard", sample, getHibbardGaps(n));
+    testSort("Knuth", sample, getKnuthGaps(n));
 
     return 0;
 }
